@@ -70,16 +70,19 @@ class JwtAPI_Controller extends chriskacerguis\RestServer\RestController {
             $jwt = $this->renewJWT(); // Get new Token and set to HTTP header
 
             $message = [
+                //'status' => REST_Controller::HTTP_OK,
                 'token' => $jwt,
                 'message' => 'User logged'
             ];
             $this->set_response($message); // 200
         } else {
+            $this->auth_code = 401;
             $message = [
+                //'status' => REST_Controller::HTTP_UNAUTHORIZED,
                 'token' => "",
                 'message' => 'Bad username/password'
             ];
-            //$this->set_response($message); // 401
+            $this->set_response($message, $this->auth_code); // 401
         }
     }
 

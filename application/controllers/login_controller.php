@@ -21,13 +21,6 @@ class login_controller  extends JwtAPI_Controller {
         $pass = $this->post("pass");
         if ($this->login($user, $pass)){
             $jwt = $this->renewJWT();
-        } else {
-            $this->auth_code=401;
-            $message = [
-                'token' => "",
-                'message' => 'Bad username/password'
-            ];
-            $this->set_response($message, $this->auth_code); // 401
         }
     }
 }
