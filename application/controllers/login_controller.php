@@ -13,8 +13,7 @@ class login_controller  extends JwtAPI_Controller {
         ];
         $this->init($config,300); // configuration + auth timeout
     }
- 
-
+    
     public function login_post()
     {
         $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");

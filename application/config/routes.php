@@ -55,3 +55,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 // routes api
 $route['login'] = 'login_controller/login';
+
+// routes edit perfil
+$route['profile/edit'] = 'perfil_controller/profile_edit';
