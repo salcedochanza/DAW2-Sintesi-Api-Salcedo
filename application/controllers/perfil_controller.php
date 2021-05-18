@@ -26,13 +26,25 @@ class perfil_controller  extends JwtAPI_Controller {
             $jwt = $this->renewJWT();
 
             $id = $this->put("id");
-            $data = array(
-                'user' => $this->put("user"),
-                'firstName' => $this->put("firstName"),
-                'lastName' => $this->put("lastName"),
-                'email' => $this->put("email"),
-                'phone' => $this->put("phone"),
-            );
+            $password = $this->put("password");
+            if ($password != null){
+                $data = array(
+                    'username' => $this->put("user"),
+                    'password' => $this->put("password"),
+                    'first_name' => $this->put("firstName"),
+                    'last_name' => $this->put("lastName"),
+                    'email' => $this->put("email"),
+                    'phone' => $this->put("phone"),
+                );
+            } else {
+                $data = array(
+                    'username' => $this->put("user"),
+                    'first_name' => $this->put("firstName"),
+                    'last_name' => $this->put("lastName"),
+                    'email' => $this->put("email"),
+                    'phone' => $this->put("phone"),
+                );
+            }
 
             if ($this->ion_auth->update($id, $data)){
                 $user = $this->ion_auth->user($id)->row();
@@ -47,9 +59,9 @@ class perfil_controller  extends JwtAPI_Controller {
                 $message = [
                     'status' => false,
                     'token' => "",
-                    'message' => 'Perfil Editat'
+                    'message' => 'Error al editar perfil'
                 ];
-                $this->set_response($message, 200);
+                $this->set_response($message, 401);
             }
         } else {
             $message = [
