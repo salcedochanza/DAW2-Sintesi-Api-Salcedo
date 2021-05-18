@@ -66,3 +66,8 @@ $route['categories'] = 'categories_controller/categories';
 $route['user'] = 'users_controller/user';
 $route['users'] = 'users_controller/users';
 $route['users/(:any)'] = 'users_controller/users/$1';
+
+//router groups
+$route['group'] = 'groups_controller/group';
+$route['groups'] = 'groups_controller/groups';
+$route['groups/(:any)'] = 'groups_controller/groups/$1';
