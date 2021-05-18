@@ -61,3 +61,7 @@ $route['profile/edit'] = 'perfil_controller/profile_edit';
 
 // routes categories
 $route['categories'] = 'categories_controller/categories';
+
+//routes users
+$route['users'] = 'users_controller/users';
+$route['users/(:any)'] = 'users_controller/users/$1';

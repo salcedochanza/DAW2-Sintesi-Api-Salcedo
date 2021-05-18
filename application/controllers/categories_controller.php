@@ -20,7 +20,9 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $query = $this->db->get('categories');
+        $parent = $this->get("parent");
+
+        $query = $this->db->get_where('categories', array('parent_id' => $parent));
         $this->response($query->result_array(), 200);
     }
 
