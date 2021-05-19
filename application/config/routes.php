@@ -74,3 +74,8 @@ $route['fills'] = 'categories_controller/fills';
 $route['category'] = 'categories_controller/category';
 $route['categories'] = 'categories_controller/categories';
 $route['categories/(:any)'] = 'categories_controller/categories/$1';
+
+//routes tags
+$route['tag'] = 'tags_controller/tag';
+$route['tags'] = 'tags_controller/tags';
+$route['tags/(:any)'] = 'tags_controller/tags/$1';
