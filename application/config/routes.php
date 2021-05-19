@@ -79,3 +79,8 @@ $route['categories/(:any)'] = 'categories_controller/categories/$1';
 $route['tag'] = 'tags_controller/tag';
 $route['tags'] = 'tags_controller/tags';
 $route['tags/(:any)'] = 'tags_controller/tags/$1';
+
+//routes recursos
+$route['recurs'] = 'recursos_controller/recurs';
+$route['recursos'] = 'recursos_controller/recursos';
+$route['recursos/(:any)'] = 'recursos_controller/recursos/$1';
