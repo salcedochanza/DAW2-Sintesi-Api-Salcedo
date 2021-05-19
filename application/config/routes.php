@@ -59,15 +59,18 @@ $route['login'] = 'login_controller/login';
 // routes edit perfil
 $route['profile/edit'] = 'perfil_controller/profile_edit';
 
-// routes categories
-$route['categories'] = 'categories_controller/categories';
-
 //routes users
 $route['user'] = 'users_controller/user';
 $route['users'] = 'users_controller/users';
 $route['users/(:any)'] = 'users_controller/users/$1';
 
-//router groups
+//routes groups
 $route['group'] = 'groups_controller/group';
 $route['groups'] = 'groups_controller/groups';
 $route['groups/(:any)'] = 'groups_controller/groups/$1';
+
+//routes categories
+$route['fills'] = 'categories_controller/fills';
+$route['category'] = 'categories_controller/category';
+$route['categories'] = 'categories_controller/categories';
+$route['categories/(:any)'] = 'categories_controller/categories/$1';
