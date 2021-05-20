@@ -84,3 +84,5 @@ $route['tags/(:any)'] = 'tags_controller/tags/$1';
 $route['recurs'] = 'recursos_controller/recurs';
 $route['recursos'] = 'recursos_controller/recursos';
 $route['recursos/(:any)'] = 'recursos_controller/recursos/$1';
+$route['recursosCat'] = 'recursos_controller/recursosCat';
+

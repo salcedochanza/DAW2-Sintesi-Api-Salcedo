@@ -41,6 +41,22 @@ class recursos_controller  extends JwtAPI_Controller {
             $this->set_response($message, 401);
         }
     }
+    public function recursosCat_get()
+    {
+        $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+
+        
+        $id = $this->get("id");
+        $query = $this->db->get_where('recursos', array('categoria' => $id));
+        $message = [
+            'status' => true,
+            'recurs' => $query->result_array(),
+            'message' => 'Dades recurs'
+        ];
+        $this->set_response($message, 200);
+    }
 
     public function recursos_get()
     {
@@ -58,24 +74,45 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $this->load->library('upload', $config);
+        
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
-
-            $data = array(
-                'titol' => $this->post("titol"),
-                'descripcio' => $this->post("descripcio"),
-                'disponibilitat' => $this->post("disponibilitat"),
-                'categoria' => $this->post("categoria"),
-                'explicacio' => $this->post("explicacio"),
-            );
-            $this->db->insert('recursos', $data);
-
-            $message = [
-                'status' => true,
-                'token' => $jwt,
-                'message' => 'Recurs creat'
-            ];
-            $this->set_response($message, 200);
+            
+            
+            $file = $this->post("file");
+            var_dump($file);
+    
+            if ( ! $this->upload->do_upload($file))
+            {
+                    $message = [
+                        'status' => true,
+                        'errorData' => array('error' => $this->upload->display_errors()),
+                        'token' => $jwt,
+                        'message' => 'Recurs creat'
+                    ];
+                    $this->set_response($message, 400);
+            }
+            else
+            {
+                    $data = array(
+                        'titol' => $this->post("titol"),
+                        'descripcio' => $this->post("descripcio"),
+                        'disponibilitat' => $this->post("disponibilitat"),
+                        'categoria' => $this->post("categoria"),
+                        'explicacio' => $this->post("explicacio"),
+                    );
+                    $this->db->insert('recursos', $data);
+        
+                    $message = [
+                        'status' => true,
+                        'token' => $jwt,
+                        'message' => 'Recurs creat'
+                    ];
+                    $this->set_response($message, 200);
+            }
         }
     }
 
@@ -149,6 +186,13 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->response(null,200); // OK (200) being the HTTP response code
     }
     public function recursos_options() {
+        $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+
+        $this->response(null,200); // OK (200) being the HTTP response code
+    }
+    public function recursosCat_options() {
         $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
