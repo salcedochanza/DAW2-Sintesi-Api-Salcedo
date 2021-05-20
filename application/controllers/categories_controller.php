@@ -20,16 +20,26 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $jwt = $this->renewJWT();
-        $id = $this->get("id");
-        $query = $this->db->get_where('categories', array('id' => $id));
-        $message = [
-            'status' => true,
-            'group' => $query->result_array(),
-            'token' => $jwt,
-            'message' => 'Dades categoria'
-        ];
-        $this->set_response($message, 200);
+        if ($this->auth_request()){
+            $jwt = $this->renewJWT();
+            $id = $this->get("id");
+            $query = $this->db->get_where('categories', array('id' => $id));
+            $message = [
+                'status' => true,
+                'group' => $query->result_array(),
+                'token' => $jwt,
+                'message' => 'Dades categoria'
+            ];
+            $this->set_response($message, 200);
+        } else {
+            $jwt = $this->renewJWT();
+            $message = [
+                'status' => false,
+                'token' => $jwt,
+                'message' => 'Error al agafar les dades'
+            ];
+            $this->set_response($message, 401);
+        }
     }
 
     public function categories_get()
@@ -89,11 +99,11 @@ class categories_controller  extends JwtAPI_Controller {
     public function categories_put()
     {
         $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer ");
 
-
+        error_log("a");
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
 
@@ -112,6 +122,7 @@ class categories_controller  extends JwtAPI_Controller {
                 'token' => $jwt,
                 'message' => 'Categoria Editada'
             ];
+            error_log("b");
             $this->set_response($message, 200);
         } else {
             $jwt = $this->renewJWT();
@@ -120,6 +131,7 @@ class categories_controller  extends JwtAPI_Controller {
                 'token' => $jwt,
                 'message' => 'Bad auth information. ' . $this->error_message
             ];
+            error_log("c");
             $this->set_response($message, $this->auth_code); // 400 / 401 / 419 / 500
         }
         

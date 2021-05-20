@@ -20,16 +20,26 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $jwt = $this->renewJWT();
-        $id = $this->get("id");
-        $query = $this->db->get_where('etiquetes', array('id' => $id));
-        $message = [
-            'status' => true,
-            'tag' => $query->result_array(),
-            'token' => $jwt,
-            'message' => 'Dades etiqueta'
-        ];
-        $this->set_response($message, 200);
+        if ($this->auth_request()){
+            $jwt = $this->renewJWT();
+            $id = $this->get("id");
+            $query = $this->db->get_where('etiquetes', array('id' => $id));
+            $message = [
+                'status' => true,
+                'tag' => $query->result_array(),
+                'token' => $jwt,
+                'message' => 'Dades etiqueta'
+            ];
+            $this->set_response($message, 200);
+        } else {
+            $jwt = $this->renewJWT();
+            $message = [
+                'status' => false,
+                'token' => $jwt,
+                'message' => 'Error al agafar les dades'
+            ];
+            $this->set_response($message, 401);
+        }
     }
 
     public function tags_get()
@@ -91,11 +101,10 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer ");
-
-
+        
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
-
+            
             $id = $this->put("id");
             
             $data = array(
@@ -110,14 +119,25 @@ class tags_controller  extends JwtAPI_Controller {
                 'token' => $jwt,
                 'message' => 'Group Editat'
             ];
+            error_log("b");
             $this->set_response($message, 200);
+
         } else {
+
+            $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+        $this->output->set_header("Authorization: Bearer ");
+
             $jwt = $this->renewJWT();
             $message = [
                 'status' => $this->auth_code,
                 'token' => $jwt,
                 'message' => 'Bad auth information. ' . $this->error_message
             ];
+            error_log($this->output->get_header("Access-Control-Allow-Origin"));
+            error_log("c");
+
             $this->set_response($message, $this->auth_code); // 400 / 401 / 419 / 500
         }
         

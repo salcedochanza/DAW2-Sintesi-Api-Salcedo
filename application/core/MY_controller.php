@@ -17,6 +17,7 @@ class JwtAPI_Controller extends chriskacerguis\RestServer\RestController {
     protected $error_message;
     protected $auth_code;
     protected $expiration;
+    
 
     public function __construct () 
     { 

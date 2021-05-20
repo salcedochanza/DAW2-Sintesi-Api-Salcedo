@@ -20,16 +20,26 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $jwt = $this->renewJWT();
-        $id = $this->get("id");
-        $query = $this->db->get_where('recursos', array('id' => $id));
-        $message = [
-            'status' => true,
-            'recurs' => $query->result_array(),
-            'token' => $jwt,
-            'message' => 'Dades recurs'
-        ];
-        $this->set_response($message, 200);
+        if ($this->auth_request()){
+            $jwt = $this->renewJWT();
+            $id = $this->get("id");
+            $query = $this->db->get_where('recursos', array('id' => $id));
+            $message = [
+                'status' => true,
+                'recurs' => $query->result_array(),
+                'token' => $jwt,
+                'message' => 'Dades recurs'
+            ];
+            $this->set_response($message, 200);
+        } else {
+            $jwt = $this->renewJWT();
+            $message = [
+                'status' => false,
+                'token' => $jwt,
+                'message' => 'Error al agafar les dades'
+            ];
+            $this->set_response($message, 401);
+        }
     }
 
     public function recursos_get()
