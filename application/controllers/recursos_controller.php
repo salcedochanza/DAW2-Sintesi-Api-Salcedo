@@ -5,7 +5,7 @@ class recursos_controller  extends JwtAPI_Controller {
     public function __construct () 
     { 
         parent::__construct ();
-        $this->load->database();
+        $this->load->model('recursos_model');
 
         $config=[
             "sub" => "secure.jwt.dwtube", // subject of token
@@ -23,7 +23,8 @@ class recursos_controller  extends JwtAPI_Controller {
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
             $id = $this->get("id");
-            $query = $this->db->get_where('recursos', array('id' => $id));
+            $query = $this->recursos_model->get_recurs($id);
+            // $query = $this->db->get_where('recursos', array('id' => $id));
             $message = [
                 'status' => true,
                 'recurs' => $query->result_array(),
@@ -49,7 +50,8 @@ class recursos_controller  extends JwtAPI_Controller {
 
         
         $id = $this->get("id");
-        $query = $this->db->get_where('recursos', array('categoria' => $id));
+        $query = $this->recursos_model->get_recursCat($id);
+        // $query = $this->db->get_where('recursos', array('categoria' => $id));
         $message = [
             'status' => true,
             'recurs' => $query->result_array(),
@@ -64,7 +66,8 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $query = $this->db->get_where('recursos');
+        $query = $this->recursos_model->get_recursos();
+        // $query = $this->db->get_where('recursos');
         $this->response($query->result_array(), 200);
     }
 
@@ -91,7 +94,7 @@ class recursos_controller  extends JwtAPI_Controller {
                         'status' => true,
                         'errorData' => array('error' => $this->upload->display_errors()),
                         'token' => $jwt,
-                        'message' => 'Recurs creat'
+                        'message' => 'Error al crear recurs'
                     ];
                     $this->set_response($message, 400);
             }
@@ -104,7 +107,8 @@ class recursos_controller  extends JwtAPI_Controller {
                         'categoria' => $this->post("categoria"),
                         'explicacio' => $this->post("explicacio"),
                     );
-                    $this->db->insert('recursos', $data);
+                    $this->recursos_model->insert('recursos', $data);
+                    // $this->db->insert('recursos', $data);
         
                     $message = [
                         'status' => true,
@@ -125,8 +129,9 @@ class recursos_controller  extends JwtAPI_Controller {
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
 
-            $this->db->where('id', $id);
-            $this->db->delete('recursos');
+            $this->recursos_model->delete($id);
+            // $this->db->where('id', $id);
+            // $this->db->delete('recursos');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -157,6 +162,7 @@ class recursos_controller  extends JwtAPI_Controller {
                 'explicacio' => $this->put("explicacio"),
             );
         
+            $this->db->recursos_model($id, $data);
             $this->db->where('id', $id);
             $this->db->update('recursos', $data);
         

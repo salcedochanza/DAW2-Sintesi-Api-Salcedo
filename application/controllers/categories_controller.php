@@ -5,7 +5,7 @@ class categories_controller  extends JwtAPI_Controller {
     public function __construct () 
     { 
         parent::__construct ();
-        $this->load->database();
+        $this->load->model('categories_model');
 
         $config=[
             "sub" => "secure.jwt.dwtube", // subject of token
@@ -23,7 +23,8 @@ class categories_controller  extends JwtAPI_Controller {
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
             $id = $this->get("id");
-            $query = $this->db->get_where('categories', array('id' => $id));
+            $query = $this->categories_model->get_category($id);
+            //$query = $this->categories_model->get_where('categories', array('id' => $id));
             $message = [
                 'status' => true,
                 'group' => $query->result_array(),
@@ -48,7 +49,8 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        $query = $this->db->get_where('categories');
+        $query = $this->categories_model->get_categories();
+        // $query = $this->db->get_where('categories');
         $this->response($query->result_array(), 200);
     }
 
@@ -65,7 +67,8 @@ class categories_controller  extends JwtAPI_Controller {
                 'name' => $this->post("name"),
                 'parent_id' => $this->post("parentId"),
             );
-            $this->db->insert('categories', $data);
+            $this->categories_model->insert($data);
+            // $this->db->insert('categories', $data);
 
             $message = [
                 'status' => true,
@@ -84,9 +87,10 @@ class categories_controller  extends JwtAPI_Controller {
 
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
-
-            $this->db->where('id', $id);
-            $this->db->delete('categories');
+            
+            $this->categories_model->delete($id);
+            // $this->db->where('id', $id);
+            // $this->db->delete('categories');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -103,7 +107,6 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer ");
 
-        error_log("a");
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
 
@@ -113,16 +116,16 @@ class categories_controller  extends JwtAPI_Controller {
                 'name' => $this->put("name"),
                 'parent_id' => $this->put("parentId"),
             );
-        
-            $this->db->where('id', $id);
-            $this->db->update('categories', $data);
+            
+            $this->categories_model->put($id, $data);
+            // $this->db->where('id', $id);
+            // $this->db->update('categories', $data);
         
             $message = [
                 'status' => true,
                 'token' => $jwt,
                 'message' => 'Categoria Editada'
             ];
-            error_log("b");
             $this->set_response($message, 200);
         } else {
             $jwt = $this->renewJWT();
@@ -131,7 +134,6 @@ class categories_controller  extends JwtAPI_Controller {
                 'token' => $jwt,
                 'message' => 'Bad auth information. ' . $this->error_message
             ];
-            error_log("c");
             $this->set_response($message, $this->auth_code); // 400 / 401 / 419 / 500
         }
         
@@ -165,7 +167,8 @@ class categories_controller  extends JwtAPI_Controller {
 
         $parent = $this->get("parent");
 
-        $query = $this->db->get_where('categories', array('parent_id' => $parent));
+        $query = $this->categories_model->get_fills($parent);
+        // $query = $this->db->get_where('categories', array('parent_id' => $parent));
         $this->response($query->result_array(), 200);
     }
 
