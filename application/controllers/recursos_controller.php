@@ -78,36 +78,41 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
         $config['upload_path'] = './uploads/';
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|png|txt';
         $this->load->library('upload', $config);
         
         if ($this->auth_request()){
             $jwt = $this->renewJWT();
-            
-            
-            $file = $this->post("file");
-            var_dump($file);
-    
-            if ( ! $this->upload->do_upload($file))
-            {
-                    $message = [
-                        'status' => true,
-                        'errorData' => array('error' => $this->upload->display_errors()),
-                        'token' => $jwt,
-                        'message' => 'Error al crear recurs'
-                    ];
-                    $this->set_response($message, 400);
+
+            $data = array(
+                'titol' => $this->post("titol"),
+                'descripcio' => $this->post("descripcio"),
+                'explicacio' => $this->post("explicacio"),
+                'categoria' => $this->post("categoria"),
+                'tipus_disponibilitat' => $this->post("selDisponibilitat"),
+                'tipus' => $this->post("selVideorecurs"),
+                'propietari' => $this->post("propietari"),
+            );
+
+            if ($this->post("selDisponibilitat") != 4){
+                $data['disponibilitat'] = $this->post("disponibilitat");
             }
-            else
-            {
-                    $data = array(
-                        'titol' => $this->post("titol"),
-                        'descripcio' => $this->post("descripcio"),
-                        'disponibilitat' => $this->post("disponibilitat"),
-                        'categoria' => $this->post("categoria"),
-                        'explicacio' => $this->post("explicacio"),
-                    );
-                    $this->recursos_model->insert('recursos', $data);
+
+            if ($this->post("selVideorecurs") == 1 || $this->post("selVideorecurs") == 2){
+                if ( ! $this->upload->do_upload('file'))
+                {
+                        $message = [
+                            'status' => true,
+                            'errorData' => array('error' => $this->upload->display_errors()),
+                            'token' => $jwt,
+                            'message' => 'Error al crear recurs'
+                        ];
+                        $this->set_response($message, 400);
+                }
+                else
+                {
+                    $data['videorecurs'] = $_FILES['file']['name'];
+                    $this->recursos_model->insert($data);
                     // $this->db->insert('recursos', $data);
         
                     $message = [
@@ -116,7 +121,14 @@ class recursos_controller  extends JwtAPI_Controller {
                         'message' => 'Recurs creat'
                     ];
                     $this->set_response($message, 200);
+                }
+            } elseif ($this->post("selVideorecurs") == 3) {
+                $data['videorecurs'] = $this->post("videorecurs");
+                $this->recursos_model->insert($data);
+            } elseif ($this->post("selVideorecurs") == 4) {
+                //canvas
             }
+            
         }
     }
 

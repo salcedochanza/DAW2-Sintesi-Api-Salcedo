@@ -11,27 +11,27 @@ class tags_model  extends CI_Model {
 
     public function get_tag($id)
     {
-        $query = $this->db->get_where('tags', array('id' => $id));
+        $query = $this->db->get_where('etiquetes', array('id' => $id));
         return $query;
     }
     public function get_tags()
     {
-        $query = $this->db->get_where('tags');
+        $query = $this->db->get_where('etiquetes');
         return $query;
     }
     public function insert($data)
     {
-        $this->db->insert('tags', $data);
+        $this->db->insert('etiquetes', $data);
     }
     public function delete($id)
     {
         $this->db->where('id', $id);
-        $this->db->delete('tags');
+        $this->db->delete('etiquetes');
     }
     public function put($id, $data)
     {
         $this->db->where('id', $id);
-        $this->db->update('tags', $data);
+        $this->db->update('etiquetes', $data);
     }
 }
 
