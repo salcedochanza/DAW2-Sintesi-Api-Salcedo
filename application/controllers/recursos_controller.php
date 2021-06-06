@@ -112,23 +112,21 @@ class recursos_controller  extends JwtAPI_Controller {
                 else
                 {
                     $data['videorecurs'] = $_FILES['file']['name'];
-                    $this->recursos_model->insert($data);
-                    // $this->db->insert('recursos', $data);
-        
-                    $message = [
-                        'status' => true,
-                        'token' => $jwt,
-                        'message' => 'Recurs creat'
-                    ];
-                    $this->set_response($message, 200);
                 }
             } elseif ($this->post("selVideorecurs") == 3) {
                 $data['videorecurs'] = $this->post("videorecurs");
-                $this->recursos_model->insert($data);
             } elseif ($this->post("selVideorecurs") == 4) {
-                //canvas
+                $data['canvas'] = $this->post("videorecurs");
             }
             
+            $this->recursos_model->insert($data);
+
+            $message = [
+                'status' => true,
+                'token' => $jwt,
+                'message' => 'Recurs creat'
+            ];
+            $this->set_response($message, 200);
         }
     }
 
