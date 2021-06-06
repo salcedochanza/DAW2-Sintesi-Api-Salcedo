@@ -86,3 +86,5 @@ $route['recursos'] = 'recursos_controller/recursos';
 $route['recursos/(:any)'] = 'recursos_controller/recursos/$1';
 $route['recursosCat'] = 'recursos_controller/recursosCat';
 
+// routes favoritos
+$route['favoritos'] = 'favoritos_controller/favoritos';
