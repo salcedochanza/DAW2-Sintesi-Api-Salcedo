@@ -23,6 +23,10 @@ class tags_model  extends CI_Model {
     {
         $this->db->insert('etiquetes', $data);
     }
+    public function insertRecursEtiqueta($data)
+    {
+        $this->db->insert('recursos_etiquetes', $data);
+    }
     public function delete($id)
     {
         $this->db->where('id', $id);

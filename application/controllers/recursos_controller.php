@@ -59,6 +59,22 @@ class recursos_controller  extends JwtAPI_Controller {
         ];
         $this->set_response($message, 200);
     }
+    public function recursosProfe_get()
+    {
+        $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+
+        
+        $id = $this->get("id");
+        $query = $this->recursos_model->get_recursProfe($id);
+        $message = [
+            'status' => true,
+            'recurs' => $query->result_array(),
+            'message' => 'Dades recurs'
+        ];
+        $this->set_response($message, 200);
+    }
 
     public function recursos_get()
     {
@@ -119,7 +135,17 @@ class recursos_controller  extends JwtAPI_Controller {
                 $data['canvas'] = $this->post("videorecurs");
             }
             
-            $this->recursos_model->insert($data);
+            $recursId = $this->recursos_model->insert($data);
+
+            $this->load->model('tags_model');
+            $arrayEtiquetes = explode(",", $this->post("etiquetes"));
+            foreach ($arrayEtiquetes as $etiqueta) {
+                $dataEtiquetes = array (
+                    'recurs_id' => $recursId,
+                    'etiqueta_id' => $etiqueta,
+                );
+                $this->tags_model->insertRecursEtiqueta($dataEtiquetes);
+            }
 
             $message = [
                 'status' => true,
@@ -209,6 +235,13 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->response(null,200); // OK (200) being the HTTP response code
     }
     public function recursosCat_options() {
+        $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        $this->output->set_header("Access-Control-Allow-Origin: *");
+
+        $this->response(null,200); // OK (200) being the HTTP response code
+    }
+    public function recursosProfe_options() {
         $this->output->set_header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");

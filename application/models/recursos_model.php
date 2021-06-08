@@ -19,6 +19,11 @@ class recursos_model  extends CI_Model {
         $query = $this->db->get_where('recursos', array('categoria' => $id));
         return $query;
     }
+    public function get_recursProfe($id)
+    {
+        $query = $this->db->get_where('recursos', array('propietari' => $id));
+        return $query;
+    }
     public function get_recursos()
     {
         $query = $this->db->get_where('recursos');
@@ -27,6 +32,8 @@ class recursos_model  extends CI_Model {
     public function insert($data)
     {
         $this->db->insert('recursos', $data);
+
+        return $this->db->insert_id();
     }
     public function delete($id)
     {
