@@ -37,6 +37,11 @@ class tags_model  extends CI_Model {
         $this->db->where('id', $id);
         $this->db->update('etiquetes', $data);
     }
+    public function putRecursEtiqueta($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('recursos_etiquetes', $data);
+    }
 }
 
 /* End of file tags_model.php */

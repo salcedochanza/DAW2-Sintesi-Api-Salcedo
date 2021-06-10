@@ -189,26 +189,65 @@ class recursos_controller  extends JwtAPI_Controller {
             $jwt = $this->renewJWT();
 
             $id = $this->put("id");
-            
+            $config['upload_path'] = './uploads/';
+            $config['allowed_types'] = 'gif|jpg|png|txt';
+            $this->load->library('upload', $config);
+
             $data = array(
                 'titol' => $this->put("titol"),
                 'descripcio' => $this->put("descripcio"),
-                'disponibilitat' => $this->put("disponibilitat"),
-                'categoria' => $this->put("categoria"),
                 'explicacio' => $this->put("explicacio"),
+                'categoria' => $this->put("categoria"),
+                'tipus_disponibilitat' => $this->put("selDisponibilitat"),
+                'tipus' => $this->put("selVideorecurs"),
+                'propietari' => $this->put("propietari"),
             );
-        
-            $this->db->recursos_model($id, $data);
-            $this->db->where('id', $id);
-            $this->db->update('recursos', $data);
-        
+
+            if ($this->put("selDisponibilitat") != 4){
+                $data['disponibilitat'] = $this->put("disponibilitat");
+            }
+
+            if ($this->put("selVideorecurs") == 1 || $this->put("selVideorecurs") == 2){
+                if ( ! $this->upload->do_upload('file'))
+                {
+                        $message = [
+                            'status' => true,
+                            'errorData' => array('error' => $this->upload->display_errors()),
+                            'token' => $jwt,
+                            'message' => 'Error al modificar recurs'
+                        ];
+                        $this->set_response($message, 400);
+                }
+                else
+                {
+                    $data['videorecurs'] = $_FILES['file']['name'];
+                }
+            } elseif ($this->put("selVideorecurs") == 3) {
+                $data['videorecurs'] = $this->put("videorecurs");
+            } elseif ($this->put("selVideorecurs") == 4) {
+                $data['canvas'] = $this->put("videorecurs");
+            }
+            
+            $this->recursos_model->put($id, $data);
+
+            $this->load->model('tags_model');
+            $arrayEtiquetes = explode(",", $this->put("etiquetes"));
+            foreach ($arrayEtiquetes as $etiqueta) {
+                $dataEtiquetes = array (
+                    'etiqueta_id' => $etiqueta,
+                );
+                $this->tags_model->putRecursEtiqueta($id, $dataEtiquetes);
+            }
+
             $message = [
                 'status' => true,
                 'token' => $jwt,
-                'message' => 'Recurs Editat'
+                'message' => 'Recurs modificat'
             ];
             $this->set_response($message, 200);
+
         } else {
+
             $jwt = $this->renewJWT();
             $message = [
                 'status' => $this->auth_code,
