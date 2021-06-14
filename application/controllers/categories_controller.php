@@ -24,7 +24,6 @@ class categories_controller  extends JwtAPI_Controller {
             $jwt = $this->renewJWT();
             $id = $this->get("id");
             $query = $this->categories_model->get_category($id);
-            //$query = $this->categories_model->get_where('categories', array('id' => $id));
             $message = [
                 'status' => true,
                 'group' => $query->result_array(),
@@ -50,7 +49,6 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
         $query = $this->categories_model->get_categories();
-        // $query = $this->db->get_where('categories');
         $this->response($query->result_array(), 200);
     }
 
@@ -60,7 +58,7 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $data = array(
@@ -68,7 +66,6 @@ class categories_controller  extends JwtAPI_Controller {
                 'parent_id' => $this->post("parentId"),
             );
             $this->categories_model->insert($data);
-            // $this->db->insert('categories', $data);
 
             $message = [
                 'status' => true,
@@ -85,12 +82,10 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
             
             $this->categories_model->delete($id);
-            // $this->db->where('id', $id);
-            // $this->db->delete('categories');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -107,7 +102,7 @@ class categories_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer ");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $id = $this->put("id");
@@ -118,8 +113,6 @@ class categories_controller  extends JwtAPI_Controller {
             );
             
             $this->categories_model->put($id, $data);
-            // $this->db->where('id', $id);
-            // $this->db->update('categories', $data);
         
             $message = [
                 'status' => true,
@@ -168,7 +161,6 @@ class categories_controller  extends JwtAPI_Controller {
         $parent = $this->get("parent");
 
         $query = $this->categories_model->get_fills($parent);
-        // $query = $this->db->get_where('categories', array('parent_id' => $parent));
         $this->response($query->result_array(), 200);
     }
 

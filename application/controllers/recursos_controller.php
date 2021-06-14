@@ -24,7 +24,6 @@ class recursos_controller  extends JwtAPI_Controller {
             $jwt = $this->renewJWT();
             $id = $this->get("id");
             $query = $this->recursos_model->get_recurs($id);
-            // $query = $this->db->get_where('recursos', array('id' => $id));
             $message = [
                 'status' => true,
                 'recurs' => $query->result_array(),
@@ -51,7 +50,6 @@ class recursos_controller  extends JwtAPI_Controller {
         
         $id = $this->get("id");
         $query = $this->recursos_model->get_recursCat($id);
-        // $query = $this->db->get_where('recursos', array('categoria' => $id));
         $message = [
             'status' => true,
             'recurs' => $query->result_array(),
@@ -83,7 +81,6 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
         $query = $this->recursos_model->get_recursos();
-        // $query = $this->db->get_where('recursos');
         $this->response($query->result_array(), 200);
     }
 
@@ -97,7 +94,8 @@ class recursos_controller  extends JwtAPI_Controller {
         $config['allowed_types'] = 'gif|jpg|png|txt';
         $this->load->library('upload', $config);
         
-        if ($this->auth_request()){
+        $group = array('admin', 'profe');
+        if ($this->auth_request($group)){
             $jwt = $this->renewJWT();
 
             $data = array(
@@ -162,12 +160,11 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        $group = array('admin', 'profe');
+        if ($this->auth_request($group)){
             $jwt = $this->renewJWT();
 
             $this->recursos_model->delete($id);
-            // $this->db->where('id', $id);
-            // $this->db->delete('recursos');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -185,7 +182,8 @@ class recursos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Authorization: Bearer ");
 
 
-        if ($this->auth_request()){
+        $group = array('admin', 'profe');
+        if ($this->auth_request($group)){
             $jwt = $this->renewJWT();
 
             $id = $this->put("id");

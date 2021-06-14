@@ -20,11 +20,10 @@ class groups_controller extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
             $id = $this->get("id");
             $query = $this->groups_model->get_group($id);
-            // $query = $this->db->get_where('groups', array('id' => $id));
             $message = [
                 'status' => true,
                 'group' => $query->result_array(),
@@ -50,7 +49,6 @@ class groups_controller extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
         $query = $this->groups_model->get_groups();
-        // $query = $this->db->get_where('groups');
         $this->response($query->result_array(), 200);
     }
 
@@ -60,7 +58,7 @@ class groups_controller extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $data = array(
@@ -69,7 +67,6 @@ class groups_controller extends JwtAPI_Controller {
             );
 
             $this->groups_model->insert($data);
-            // $this->db->insert('groups', $data);
 
             $message = [
                 'status' => true,
@@ -86,12 +83,10 @@ class groups_controller extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $this->groups_model->delete($id);
-            // $this->db->where('id', $id);
-            // $this->db->delete('groups');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -109,7 +104,7 @@ class groups_controller extends JwtAPI_Controller {
         $this->output->set_header("Authorization: Bearer ");
 
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $id = $this->put("id");
@@ -120,8 +115,6 @@ class groups_controller extends JwtAPI_Controller {
             );
         
             $this->groups_model->put($id, $data);
-            // $this->db->where('id', $id);
-            // $this->db->update('groups', $data);
         
             $message = [
                 'status' => true,

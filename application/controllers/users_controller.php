@@ -137,11 +137,8 @@ class users_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
-
-            //$id = $this->delete("id");
-            // $id=6;
 
             if ($this->ion_auth->delete_user($id)){
                 $message = [
@@ -167,7 +164,7 @@ class users_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $username = $this->post("username");

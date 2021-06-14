@@ -19,7 +19,7 @@ class favoritos_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $data = array(

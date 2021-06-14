@@ -20,11 +20,10 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
             $id = $this->get("id");
             $query = $this->tags_model->get_tag($id);
-            // $query = $this->db->get_where('etiquetes', array('id' => $id));
             $message = [
                 'status' => true,
                 'tag' => $query->result_array(),
@@ -50,7 +49,6 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
         $query = $this->tags_model->get_tags();
-        // $query = $this->db->get_where('etiquetes');
         $this->response($query->result_array(), 200);
     }
 
@@ -60,14 +58,13 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
         $this->output->set_header("Access-Control-Allow-Origin: *");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $data = array(
                 'name' => $this->post("name"),
             );
             $this->tags_model->insert($data);
-            // $this->db->insert('etiquetes', $data);
 
             $message = [
                 'status' => true,
@@ -84,12 +81,10 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer");
 
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
 
             $this->tags_model->delete($id);
-            // $this->db->where('id', $id);
-            // $this->db->delete('etiquetes');
             $message = [
                 'status' => true,
                 'token' => $jwt,
@@ -106,7 +101,7 @@ class tags_controller  extends JwtAPI_Controller {
         $this->output->set_header("Access-Control-Allow-Origin: *");
         $this->output->set_header("Authorization: Bearer ");
         
-        if ($this->auth_request()){
+        if ($this->auth_request('admin')){
             $jwt = $this->renewJWT();
             
             $id = $this->put("id");
@@ -116,13 +111,11 @@ class tags_controller  extends JwtAPI_Controller {
             );
         
             $this->tags_model->put($id, $data);
-            // $this->db->where('id', $id);
-            // $this->db->update('etiquetes', $data);
         
             $message = [
                 'status' => true,
                 'token' => $jwt,
-                'message' => 'Group Editat'
+                'message' => 'Etiqueta Editada'
             ];
             $this->set_response($message, 200);
 
